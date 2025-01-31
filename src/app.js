@@ -1,3 +1,11 @@
+const userForm = document.getElementById("userForm")
+const motto = document.getElementById("motto")
+const logo = document.getElementById("logo");
+const profileForm = document.getElementById("profileForm")
+const greeting = document.getElementById("greeting")
+const taskForm = document.getElementById("taskForm")
+
+
 function createStar() {
     const star = document.createElement("div");
     star.classList.add("star");
@@ -24,23 +32,22 @@ function saveUser() {
         return;
     }
 
-    const userForm = document.getElementById("userForm");
+;
     userForm.classList.add("fade-out");
     userForm.remove();
-    const motto = document.getElementById("motto")
     motto.classList.add("fade-out");
     motto.remove();
 
-    let logo = document.getElementById("logo");
+
     logo.style.transform = "scale(0.8)";
     logo.style.fontSize = "4rem";
     logo.style.opacity = "100";
 
             setTimeout(() => {
-                document.getElementById("profileForm").classList.add("hidden");
-                document.getElementById("greeting").textContent = `Hello ${name}, please enter your tasks.`;
-                document.getElementById("taskForm").classList.remove("hidden");
-                document.getElementById("taskForm").classList.add("fade-in");
+                profileForm.classList.add("hidden");
+                document.greeting.textContent = `Hello ${name}, please enter your tasks.`;
+                taskForm.classList.remove("hidden");
+                document.taskForm.classList.add("fade-in");
             }, 500);
 }
 
