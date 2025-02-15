@@ -27,16 +27,20 @@ h1 {
 
         .fade-out {
             opacity: 0;
-            transition: opacity 0.5s ease-out;
+            transition: opacity 1.5s ease-in-out;
+            transform: scale(0.3);
         }
 
         .fade-in {
             opacity: 0;
             transition: 3s cubic-bezier(0.25, 0.1, 0.25, 1);
+            transform: scale(0.95);
+            transition: opacity 1.5s ease-in-out, transform 1.5s ease-in-out;
         }
 
         .fade-in.active {
             opacity: 1;
+            transform: scale(1);
         }
 
         .shrink {
@@ -95,6 +99,7 @@ nav {
 
 
     </style>
+
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link href="./output.css" rel="stylesheet">
@@ -102,19 +107,16 @@ nav {
 </head>
 <body>
 
-    <nav id=navBar class="sticky hidden top-0 z-100 w-full bg-violet-900 shadow-lg">
+    <nav id=navBar class="sticky hidden top-0 z-50 w-full bg-violet-900 shadow-lg">
         <div class="max-w-screen-lg mx-auto flex items-center justify-between px-4 py-3 lg:px-8">
             
-            <!-- Logo -->
             <a href="#" class="text-white text-2xl font-bold">TOODLE.</a>
     
-            <!-- Menu Items (Hidden on Mobile, Shown on Larger Screens) -->
             <div class="hidden lg:flex space-x-6">
                 <a href="#" class="text-white hover:text-gray-300 transition">Dashboard</a>
                 <a href="#" class="text-white hover:text-gray-300 transition">Contact Us</a>
             </div>
     
-            <!-- User Info -->
             <div class="flex items-center space-x-3">
                 <div class="text-white text-sm text-right hidden sm:block">
                     <p id="userName" class="font-semibold">John Doe</p>
@@ -125,12 +127,10 @@ nav {
                 
                 <!-- Mobile Menu Button -->
                 <button id="menuButton" class="lg:hidden text-white focus:outline-none">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 </button>
             </div>
         </div>
     
-        <!-- Mobile Menu (Hidden by Default) -->
         <div id="mobileMenu" class="hidden bg-violet-800 lg:hidden flex flex-col space-y-2 px-4 py-3">
             <a href="#" class="text-white hover:text-gray-300 transition">Dashboard</a>
             <a href="#" class="text-white hover:text-gray-300 transition">Contact Us</a>

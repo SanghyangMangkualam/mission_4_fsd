@@ -51,6 +51,5 @@ function saveUser() {
         taskForm.classList.add("fade-in", "active");
         navBar.classList.remove("hidden");
         navBar.classList.add("fade-in", "active");
-
     }, 500);
 }
