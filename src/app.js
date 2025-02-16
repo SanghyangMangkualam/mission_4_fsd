@@ -54,49 +54,40 @@ function saveUser() {
         greetingContainer.id = "greetingContainer";
         greetingContainer.className = "hidden relative bg-black/50 shadow-lg p-6 rounded-2xl max-w-md w-full border border-white z-20 mb-4";
     
-        // Create inner flex container
         const innerContainer = document.createElement("div");
         innerContainer.className = "flex items-center gap-4";
-    
-        // Create profile picture
+
         const profilePic = document.createElement("img");
         profilePic.src = "./images/profile-picture.svg";
         profilePic.alt = "Profile Picture";
         profilePic.className = "h-10 w-10 rounded-full object-cover mr-4";
     
-        // Create greeting message
         const greetingMessage = document.createElement("h2");
         greetingMessage.id = "greetingMessage";
         greetingMessage.className = "text-xl font-bold text-white";
     
-        // Create name span
         const nameSpan = document.createElement("span");
         nameSpan.className = "text-yellow-400";
         nameSpan.textContent = name;
     
-        // Create role span
         const roleSpan = document.createElement("span");
         roleSpan.className = "text-yellow-400";
         roleSpan.textContent = `${position === "Other" ? otherPosition : position}`;
     
-        // Build message
         greetingMessage.appendChild(document.createTextNode("Hello "));
         greetingMessage.appendChild(roleSpan);
         greetingMessage.appendChild(document.createTextNode(" "));
         greetingMessage.appendChild(nameSpan);
         greetingMessage.appendChild(document.createTextNode(", what are you planning today?"));
     
-        // Add elements to inner container
         innerContainer.appendChild(profilePic);
         innerContainer.appendChild(greetingMessage);
     
-        // Add inner container to main container
         greetingContainer.appendChild(innerContainer);
     
         // Insert greeting before task form
         taskForm.parentNode.insertBefore(greetingContainer, taskForm);
-    
-        // Show greeting container
+
         greetingContainer.classList.remove("hidden");
         greetingContainer.classList.add("fade-in", "active");
     
@@ -165,14 +156,20 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
         if (taskDate === today) {
-            dueDateSpan.textContent = taskTime ? `Due Today at ${taskTime}` : "Due Today";
+            dueDateSpan.textContent = taskTime ? `Today at ${taskTime}` : "Today";
         } else if (taskDate === tomorrowString) {
-            dueDateSpan.textContent = "Due Tomorrow";
+            dueDateSpan.textContent = "Tomorrow";
         } else {
-            dueDateSpan.textContent = taskTime ? `Due ${taskDate} at ${taskTime}` : `Due ${taskDate}`;
+            const dateObj = new Date(taskDate);
+            const formattedDate = dateObj.toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+            dueDateSpan.textContent = taskTime ? `${formattedDate} at ${taskTime}` : formattedDate;
         }
 
-        dueDateSpan.classList.add("ml-2", "text-yellow-400", "text-sm");
+        dueDateSpan.classList.add("px-4", "text-yellow-400", "text-sm");
 
         const prioritySpan = document.createElement("span");
         prioritySpan.textContent = priority.charAt(0).toUpperCase() + priority.slice(1);
@@ -184,23 +181,27 @@ document.addEventListener("DOMContentLoaded", function () {
         const buttonContainer = document.createElement("div");
         buttonContainer.classList.add("flex", "gap-2", "items-center");
 
-        const editButton = document.createElement("img");
-        editButton.src = "edit-icon.svg";
-        editButton.classList.add("w-6", "h-6", "cursor-pointer");
-        editButton.title = "Edit";
-        editButton.addEventListener("click", function () {
-            const newText = prompt("Edit your task:", taskText.textContent);
-            if (newText) taskText.textContent = newText;
-        });
+        const editButton = document.createElement("button");
+editButton.className = "bg-blue-400 text-white px-0 py-1 rounded-md hover:bg-blue-500 transition-all flex items-center gap-1";
+editButton.innerHTML = `
+    <img id="editIcon" src="images/edit-icon.png">
+    <span class="hidden group-hover:inline">Edit</span>
+`;
+editButton.addEventListener("click", function () {
+    const newText = prompt("Edit your task:", taskText.textContent);
+    if (newText) taskText.textContent = newText;
+});
 
-        const deleteButton = document.createElement("img");
-        deleteButton.src = "delete-icon.svg";
-        deleteButton.classList.add("w-6", "h-6", "cursor-pointer");
-        deleteButton.title = "Delete";
-        deleteButton.addEventListener("click", function () {
-            taskItem.remove();
-            updateTaskCounter();
-        });
+const deleteButton = document.createElement("button");
+deleteButton.className = "bg-red-400 text-white px-0 py-1 rounded-md hover:bg-red-500 transition-all flex items-center gap-1";
+deleteButton.innerHTML = `
+    <img id="deleteIcon" src="images/remove-icon.png">
+    <span class="hidden group-hover:inline">Delete</span>
+`;
+deleteButton.addEventListener("click", function () {
+    taskItem.remove();
+    updateTaskCounter();
+});
 
         buttonContainer.appendChild(dueDateSpan);
         buttonContainer.appendChild(editButton);
