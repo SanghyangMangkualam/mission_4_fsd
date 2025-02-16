@@ -87,14 +87,29 @@ h1 {
     transform: translate(-50%, -50%);
 }
 
+#taskListContainer {
+    z-index: 20; /* Ensures it appears above the gradient */
+    position: relative; /* Makes sure z-index applies */
+    margin-top: 1rem;
+}
+
 nav {
     position: relative;
     background: linear-gradient(to right, rgba(76, 29, 149, 1), rgba(76, 29, 149, 0.7));
     img {
-        width: 24px; height: 24px;
+        width: 35px; height: 35px;
         margin-right: 10px;
     }
 }
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+}
+
+input[type="time"]::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+}
+
 
 
 
@@ -106,86 +121,96 @@ nav {
   <title>TOODLE. | Pembuat To-Do List</title>
 </head>
 <body>
+    
 
-    <nav id=navBar class="sticky hidden top-0 z-50 w-full bg-violet-900 shadow-lg">
-        <div class="max-w-screen-lg mx-auto flex items-center justify-between px-4 py-3 lg:px-8">
+    <div class="relative bg-[url('./images/background.jpg')] bg-cover bg-center flex flex-col items-center justify-center min-h-screen p-4">
+
+        <!-- Gradient Layer -->
+        <div class="absolute inset-0 bg-gradient-to-r from-black/80 from-10% to-black/0 z-0 pointer-events-none"></div>
+
+    
+        <div class="star-container z-10">
+            <div class="star"></div>
+            <div class="star"></div>
+            <div class="star"></div>
+            <div class="star"></div>
+            <div class="star"></div>
+            <div class="star"></div>
+            <div class="star"></div>
+        </div>
+    
+        <h1 id="logo" class="text-[10rem] mb-0 font-extrabold text-white relative transition-all z-20">TOODLE.</h1>
+        <div id="motto" class="block text-center">
+            <p class="italic mt-0 mb-4 text-lg font-extrabold text-white relative z-20">Manage your tasks!</p>
+        </div>
+    
+        <div id="userForm" class="relative z-20 bg-black/50 shadow-lg p-6 rounded-2xl max-w-md w-full border border-white">
+            <h2 class="text-xl font-bold text-white text-center mb-4">Please Fill In Your Information</h2>
+            <input type="text" id="name" placeholder="Your Name" class="border border-gray-200 w-full px-4 py-2 rounded-xl mb-3 text-stone-300 placeholder-stone-300">
+    
+            <select id="position" onchange="checkOther(this)" class="w-full px-4 py-2 border border-white rounded-xl mb-3 bg-transparent text-stone-300">
+                <option value="" disabled selected>Your Role</option>
+                <option value="Manager">Manager</option>
+                <option value="Leader">Leader</option>
+                <option value="Developer">Developer</option>
+                <option value="Designer">UI/UX Designer</option>
+                <option value="Other">Other</option>
+            </select>
+    
+            <input type="text" id="otherPosition" placeholder="Enter your position" class="hidden border border-gray-200 w-full px-4 py-2 rounded-xl mb-3 text-stone-300 placeholder-stone-300">
+    
+            <button onclick="saveUser()" class="w-full bg-purple-600 text-white py-2 rounded-xl hover:bg-pink-700 cursor-pointer">Login</button>
+        </div>
+    
+        <div id="taskForm" class="hidden relative bg-black/50 shadow-lg p-6 rounded-2xl max-w-md w-full border border-white z-20">
+            <h2 class="text-xl font-bold text-white text-center mb-4">Create Your To-Do List</h2>
+    
+            <div class="flex flex-col gap-2 space-y-2">
+                <!-- Task Name & Priority (Same Row, No Extra Gap) -->
+                <div class="flex items-center gap-1">
+                    <input type="text" id="taskName" placeholder="Task Name"
+                        class="border border-gray-200 flex-1 px-4 py-2 rounded-xl text-stone-300 placeholder-stone-300">
             
-            <a href="#" class="text-white text-2xl font-bold">TOODLE.</a>
-    
-            <div class="hidden lg:flex space-x-6">
-                <a href="#" class="text-white hover:text-gray-300 transition">Dashboard</a>
-                <a href="#" class="text-white hover:text-gray-300 transition">Contact Us</a>
-            </div>
-    
-            <div class="flex items-center space-x-3">
-                <div class="text-white text-sm text-right hidden sm:block">
-                    <p id="userName" class="font-semibold">John Doe</p>
-                    <p id="userRole" class="text-gray-300">Developer</p>
+                    <select id="priority"
+                        class="ml-2 px-4 py-2 border border-white rounded-xl bg-transparent text-stone-300 w-32">
+                        <option value="" disabled selected>Priority</option>
+                        <option value="low">Low</option>
+                        <option value="medium">Medium</option>
+                        <option value="high">High</option>
+                    </select>
                 </div>
-                <!-- Profile Picture -->
-                <img src="images/profile-picture.svg" alt="Profile" class="w-1 h-1 rounded-full border-2 border-white">
-                
-                <!-- Mobile Menu Button -->
-                <button id="menuButton" class="lg:hidden text-white focus:outline-none">
+            
+                <!-- Date Picker (Below Task & Priority) -->
+                <div class="flex items-center space-x-3 gap-2">
+                    <div class="w-full">
+                        <label id="dateLabel" for="taskDate" class="text-stone-300">Choose the Date:</label>
+                        <input type="date" id="taskDate" class="px-4 py-2 border border-white rounded-xl bg-transparent text-stone-300 w-full">
+                    </div>
+                    
+                    <div class="w-full">
+                        <label id="timeLabel" for="taskTime" class="text-stone-300 mb-2">Pick the Time:</label>
+                        <input type="time" id="taskTime" class="px-4 py-2 border border-white rounded-xl bg-transparent text-stone-300 w-full">
+                    </div>
+                </div>
+            
+                <!-- Add Task Button (Below Everything) -->
+                <button onclick="submitTask()"
+                    class="w-full bg-purple-600 text-white py-2 rounded-xl hover:bg-pink-700 transition">
+                    Add Task
                 </button>
             </div>
+            
+            
+            
         </div>
     
-        <div id="mobileMenu" class="hidden bg-violet-800 lg:hidden flex flex-col space-y-2 px-4 py-3">
-            <a href="#" class="text-white hover:text-gray-300 transition">Dashboard</a>
-            <a href="#" class="text-white hover:text-gray-300 transition">Contact Us</a>
+        <div id="taskListContainer" class="hidden mt-2 bg-black/60 px-6 py-2 rounded-2xl border border-white max-w-md w-full backdrop-blur-md shadow-xl z-20">
+            <h3 class="text-md font-medium text-white mb-2">Your Tasks</h3>
+            <ul id="taskList" class="space-y-4"></ul>
         </div>
-    </nav>
     
-
-<div class="relative bg-[url('./images/background.jpg')] bg-cover bg-center flex flex-col items-center justify-center min-h-screen p-4">
-
-    <div class="absolute inset-0 bg-gradient-to-r from-black/80 from-10% to-black/0 z-0"></div>
-
-    <div class="star-container">
-        <div class="star"></div>
-        <div class="star"></div>
-        <div class="star"></div>
-        <div class="star"></div>
-        <div class="star"></div>
-        <div class="star"></div>
-        <div class="star"></div>
-      </div>
-
-    <h1 id="logo" class="text-[10rem] mb-0 font-extrabold text-white relative transition-all z-20">TOODLE.</h1>
-    <div id="motto" class="block text-center">
-      <p class=" italic mt-0 mb-4 text-lg font-extrabold text-white relative z-20">Manage your tasks!</p> 
-    </div>
-
-
-    <div id="userForm" class="relative z-10 bg-black/50 shadow-lg p-6 rounded-2xl max-w-md w-full border border-white">
-
-        <h2 class="text-xl font-bold text-white text-center mb-4">Please Fill In Your Information</h2>
-        <input type="text" id="name" placeholder="Your Name" class="border border-gray-200 w-full px-4 py-2 rounded-xl mb-3 text-stone-300 placeholder-stone-300" >
-        
-        <select id="position" onchange="checkOther(this)" class="w-full px-4 py-2 border border-white rounded-xl mb-3 bg-transparent text-stone-300">
-            <option value="" disabled selected>Your Role</option>
-            <option value="Manager">Manager</option>
-            <option value="Manager">Leader</option>
-            <option value="Developer">Developer</option>
-            <option value="Designer">UI/UX Designer</option>
-            <option value="Other">Other</option>
-        </select>
-
-        <input type="text" id="otherPosition"  placeholder="Enter your position" class="hidden border border-gray-200 w-full px-4 py-2 rounded-xl mb-3 text-stone-300 placeholder-stone-300">
-        
-        <button onclick="saveUser()" class="w-full bg-purple-600 text-white py-2 rounded-xl hover:bg-pink-700 cursor-pointer">
-            Login
-        </button>
     </div>
     
-
-    <div id="taskForm" class="hidden relative bg-black/50 shadow-lg p-6 rounded-2xl max-w-md w-full border border-white">
-        <h2 class="text-xl font-bold text-white text-center mb-4">Create Your To-Do List</h2>
-        <input type="text" id="taskName" placeholder="Task Name" class="border border-gray-200 w-full px-4 py-2 rounded-xl mb-3 text-stone-300 placeholder-stone-300">
-
-    </div>
-</div>
 
 <script src="app.js"></script>
 </body>

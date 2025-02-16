@@ -51,5 +51,69 @@ function saveUser() {
         taskForm.classList.add("fade-in", "active");
         navBar.classList.remove("hidden");
         navBar.classList.add("fade-in", "active");
+
     }, 500);
 }
+
+let taskCounter = 0;
+
+document.addEventListener("DOMContentLoaded", function () {
+    const taskForm = document.getElementById("taskForm");
+    const taskListContainer = document.getElementById("taskListContainer");
+    const taskList = document.getElementById("taskList");
+
+    window.submitTask = function () {
+        const taskName = document.getElementById("taskName").value.trim();
+        const priority = document.getElementById("priority").value;
+
+        if (!taskName) {
+            alert("Task name cannot be empty!");
+            return;
+        }
+        if (!priority) {
+            alert("Please select a priority level!");
+            return;
+        }
+
+        const taskItem = document.createElement("li");
+        taskItem.classList.add("flex", "items-center", "justify-between", "bg-gray-800", "p-2", "rounded-xl", "text-white", "shadow");
+
+        // Checkbox to mark task as done
+        const checkbox = document.createElement("input");
+        checkbox.type = "checkbox";
+        checkbox.classList.add("mr-2");
+        checkbox.addEventListener("change", function () {
+            if (this.checked) {
+                taskItem.classList.add("line-through", "opacity-50");
+            } else {
+                taskItem.classList.remove("line-through", "opacity-50");
+            }
+        });
+
+        // Task text
+        const taskText = document.createElement("span");
+        taskText.textContent = `${taskName} - (${priority})`;
+
+        // Delete button
+        const deleteButton = document.createElement("button");
+        deleteButton.textContent = "❌";
+        deleteButton.classList.add("ml-2", "text-red-500", "hover:text-red-700");
+        deleteButton.onclick = function () {
+            taskItem.remove();
+            if (taskList.children.length === 0) {
+                taskListContainer.classList.add("hidden");
+            }
+        };
+
+        taskItem.appendChild(checkbox);
+        taskItem.appendChild(taskText);
+        taskItem.appendChild(deleteButton);
+        taskList.appendChild(taskItem);
+
+        document.getElementById("taskName").value = "";
+        document.getElementById("priority").value = "";
+
+        taskListContainer.classList.remove("hidden");
+    };
+});
+    
