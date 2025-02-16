@@ -59,14 +59,14 @@ function saveUser() {
 document.addEventListener("DOMContentLoaded", function () {
     const taskListContainer = document.getElementById("taskListContainer");
     const taskCounterText = document.getElementById("taskCounterText");
-    const deleteAllButton = document.getElementById("deleteAll");
+    const deleteAllButton = document.getElementById("deleteAllButton");
 
     function updateTaskCounter() {
         const uncheckedTasks = [...taskList.children].filter(task => !task.querySelector("input[type='checkbox']").checked).length;
         if (taskCounterText) {
             taskCounterText.textContent = `You have ${uncheckedTasks} task${uncheckedTasks !== 1 ? "s" : ""} on the list!`;
         }
-        deleteAllButton.classList.remove("hidden", taskList.children.length === 0);
+        deleteAllButton.classList.toggle("hidden", taskList.children.length === 0);
     }
     
     window.submitTask = function () {
@@ -171,8 +171,12 @@ document.addEventListener("DOMContentLoaded", function () {
         updateTaskCounter();
     };
 
-deleteAllButton.addEventListener("click", function () {  
-    taskList.innerHTML = "";  
-    updateTaskCounter();  
-});
+function deleteAllTasks(){
+    while (taskList.firstChild){
+        taskList.removeChild(taskList.firstChild);
+    };
+    updateTaskCounter();
+}
+
+deleteAllButton.addEventListener("click", deleteAllTasks);
 });
