@@ -21,6 +21,7 @@ function checkOther(select) {
 }
 
 function saveUser() {
+
     let name = document.getElementById("name").value.trim();
     let position = document.getElementById("position").value;
     let otherPosition = document.getElementById("otherPosition").value.trim();
@@ -49,6 +50,56 @@ function saveUser() {
     }, 500);
 
     setTimeout(() => {
+        const greetingContainer = document.createElement("div");
+        greetingContainer.id = "greetingContainer";
+        greetingContainer.className = "hidden relative bg-black/50 shadow-lg p-6 rounded-2xl max-w-md w-full border border-white z-20 mb-4";
+    
+        // Create inner flex container
+        const innerContainer = document.createElement("div");
+        innerContainer.className = "flex items-center gap-4";
+    
+        // Create profile picture
+        const profilePic = document.createElement("img");
+        profilePic.src = "./images/profile-picture.svg";
+        profilePic.alt = "Profile Picture";
+        profilePic.className = "h-10 w-10 rounded-full object-cover mr-4";
+    
+        // Create greeting message
+        const greetingMessage = document.createElement("h2");
+        greetingMessage.id = "greetingMessage";
+        greetingMessage.className = "text-xl font-bold text-white";
+    
+        // Create name span
+        const nameSpan = document.createElement("span");
+        nameSpan.className = "text-yellow-400";
+        nameSpan.textContent = name;
+    
+        // Create role span
+        const roleSpan = document.createElement("span");
+        roleSpan.className = "text-yellow-400";
+        roleSpan.textContent = `${position === "Other" ? otherPosition : position}`;
+    
+        // Build message
+        greetingMessage.appendChild(document.createTextNode("Hello "));
+        greetingMessage.appendChild(roleSpan);
+        greetingMessage.appendChild(document.createTextNode(" "));
+        greetingMessage.appendChild(nameSpan);
+        greetingMessage.appendChild(document.createTextNode(", what are you planning today?"));
+    
+        // Add elements to inner container
+        innerContainer.appendChild(profilePic);
+        innerContainer.appendChild(greetingMessage);
+    
+        // Add inner container to main container
+        greetingContainer.appendChild(innerContainer);
+    
+        // Insert greeting before task form
+        taskForm.parentNode.insertBefore(greetingContainer, taskForm);
+    
+        // Show greeting container
+        greetingContainer.classList.remove("hidden");
+        greetingContainer.classList.add("fade-in", "active");
+    
         taskForm.classList.remove("hidden");
         taskForm.classList.add("fade-in", "active");
         navBar.classList.remove("hidden");
@@ -114,11 +165,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
         if (taskDate === today) {
-            dueDateSpan.textContent = `Due Today at ${taskTime}`;
+            dueDateSpan.textContent = taskTime ? `Due Today at ${taskTime}` : "Due Today";
         } else if (taskDate === tomorrowString) {
             dueDateSpan.textContent = "Due Tomorrow";
         } else {
-            dueDateSpan.textContent = `Due ${taskDate} at ${taskTime}`;
+            dueDateSpan.textContent = taskTime ? `Due ${taskDate} at ${taskTime}` : `Due ${taskDate}`;
         }
 
         dueDateSpan.classList.add("ml-2", "text-yellow-400", "text-sm");
@@ -179,4 +230,4 @@ function deleteAllTasks(){
 }
 
 deleteAllButton.addEventListener("click", deleteAllTasks);
-});
+})
