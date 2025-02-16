@@ -21,13 +21,17 @@ function checkOther(select) {
 }
 
 function saveUser() {
-
     let name = document.getElementById("name").value.trim();
     let position = document.getElementById("position").value;
     let otherPosition = document.getElementById("otherPosition").value.trim();
 
     if (!name) {
         alert("Please enter your name first");
+        return;
+    }
+
+    if (!position) {
+        alert("Please select your role!");
         return;
     }
 
@@ -85,7 +89,6 @@ function saveUser() {
     
         greetingContainer.appendChild(innerContainer);
     
-        // Insert greeting before task form
         taskForm.parentNode.insertBefore(greetingContainer, taskForm);
 
         greetingContainer.classList.remove("hidden");
@@ -169,11 +172,11 @@ document.addEventListener("DOMContentLoaded", function () {
             dueDateSpan.textContent = taskTime ? `${formattedDate} at ${taskTime}` : formattedDate;
         }
 
-        dueDateSpan.classList.add("px-4", "text-yellow-400", "text-sm");
+        dueDateSpan.classList.add("px-2", "text-yellow-400", "text-sm");
 
         const prioritySpan = document.createElement("span");
         prioritySpan.textContent = priority.charAt(0).toUpperCase() + priority.slice(1);
-        prioritySpan.classList.add("ml-2", "px-2", "py-1", "rounded", "text-black", "float-right");
+        prioritySpan.classList.add("px-2", "py-1", "rounded", "text-black", "float-right");
         if (priority === "low") prioritySpan.classList.add("bg-green-600");
         if (priority === "medium") prioritySpan.classList.add("bg-yellow-600");
         if (priority === "high") prioritySpan.classList.add("bg-red-500");
@@ -188,8 +191,50 @@ editButton.innerHTML = `
     <span class="hidden group-hover:inline">Edit</span>
 `;
 editButton.addEventListener("click", function () {
-    const newText = prompt("Edit your task:", taskText.textContent);
-    if (newText) taskText.textContent = newText;
+    const currentText = taskText.textContent;
+    const currentDate = taskDate;
+    const currentTime = taskTime;
+    const currentPriority = priority;
+
+    const newText = prompt(
+        "Edit your task:\n\n" +
+        `Task: ${currentText}\n` +
+        `Date: ${currentDate}\n` +
+        `Time: ${currentTime || 'Not set'}\n\n` +
+        "Enter new values (leave blank to keep current):\n" +
+        "Format: Task Name|Date (YYYY-MM-DD)|Time (HH:MM)",
+        `${currentText}|${currentDate}|${currentTime}`
+    );
+
+    if (newText) {
+        const [newTask, newDate, newTime] = newText.split('|');
+        
+        if (newTask) taskText.textContent = newTask.trim();
+
+        if (newDate || newTime) {
+            const updatedDate = newDate || currentDate;
+            const updatedTime = newTime || currentTime;
+
+            const today = new Date().toISOString().split('T')[0];
+            const tomorrow = new Date();
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            const tomorrowString = tomorrow.toISOString().split('T')[0];
+
+            if (updatedDate === today) {
+                dueDateSpan.textContent = updatedTime ? `Today at ${updatedTime}` : "Today";
+            } else if (updatedDate === tomorrowString) {
+                dueDateSpan.textContent = "Tomorrow";
+            } else {
+                const dateObj = new Date(updatedDate);
+                const formattedDate = dateObj.toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                });
+                dueDateSpan.textContent = updatedTime ? `${formattedDate} at ${updatedTime}` : formattedDate;
+            }
+        }
+    }
 });
 
 const deleteButton = document.createElement("button");
